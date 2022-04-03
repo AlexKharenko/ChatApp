@@ -1,0 +1,30 @@
+{
+    "name": "chat",
+    "version": "1.0.0",
+    "description": "Chat application",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "format:check": "prettier --check .",
+        "format:write": "prettier --write .",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint --fix ."
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "dotenv": "^14.2.0",
+        "ws": "^8.4.2"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.17.5",
+        "@babel/eslint-parser": "^7.17.0",
+        "@babel/preset-env": "^7.16.11",
+        "eslint": "^8.10.0",
+        "eslint-config-prettier": "^8.5.0",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.5.1"
+    }
+}
