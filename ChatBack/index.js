@@ -1,11 +1,15 @@
 const http = require('http');
+const Client = require('./src/helpers/client');
 require('dotenv').config();
 
 const Router = require('./src/router');
 
 const server = http.createServer(async (req, res) => {
     // console.log(req, res);
-    Router.route(req, res);
+    const client = Client.getInstance(req, res);
+    await client.parseCookie();
+    req.client = client;
+    await Router.route(req, res);
 });
 
 server.listen(process.env.PORT, process.env?.HOSTNAME, () => {
