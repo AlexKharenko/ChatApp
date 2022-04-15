@@ -1,29 +1,26 @@
-// const { MessageController, AuthController } = require('../controllers');
+const { AuthController } = require('../controllers');
 
 class Router {
     static routes = {
-        '/': (res) => {
-            console.log('home');
-            res.end('home');
-        },
-        '/message': (res) => {
-            console.log('message');
-            res.end('message');
-        },
-        '/auth': (res) => {
-            console.log('auth');
-            res.end('auth');
-        },
+        // '/': (res) => {
+        //     console.log('home');
+        //     res.end('home');
+        // },
+        // '/message': (res) => {
+        //     console.log('message');
+        //     res.end('message');
+        // },
+        '/auth': AuthController,
     };
 
-    static route(req, res) {
+    static async route(req, res) {
         const handler = this.routes[`/${req.url.slice(1).split('/', 1)[0]}`];
         if (!handler) {
-            console.log('Not found');
-            res.end('Not found!');
-            return; 
+            res.statusCode = 404;
+            res.end(JSON.stringify({ message: 'Not found 404!' }));
+            return;
         }
-        handler(res);
+        await handler.use(req, res);
     }
 }
 
