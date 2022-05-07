@@ -1,14 +1,16 @@
 'use strict';
 
 const http = require('http');
-const bodyParse = require('./src/helpers/bodyParse');
+const bodyParser = require('./src/helpers/bodyParser');
+const urlParser = require('./src/helpers/urlParser');
 const Client = require('./src/helpers/client');
 require('dotenv').config();
 
 const Router = require('./src/router');
 
 const server = http.createServer(async (req, res) => {
-    req.body = await bodyParse.parseBody(req);
+    req.body = await bodyParser.parseBody(req);
+    urlParser.parseUrl(req);
 
     const client = await Client.getInstance(req, res);
     client.parseCookie();
