@@ -1,4 +1,4 @@
-class bodyParse {
+class bodyParser {
     static async parseBody(req) {
         try {
             const buffers = [];
@@ -15,4 +15,4 @@ class bodyParse {
     }
 }
 
-module.exports = bodyParse;
+module.exports = bodyParser;
