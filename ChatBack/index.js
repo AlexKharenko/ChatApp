@@ -1,3 +1,5 @@
+'use strict';
+
 const http = require('http');
 const Client = require('./src/helpers/client');
 require('dotenv').config();
