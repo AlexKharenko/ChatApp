@@ -1,4 +1,4 @@
-const { AuthController } = require('../controllers');
+const { AuthController, ChatController } = require('../controllers');
 
 class Router {
     static routes = {
@@ -6,10 +6,7 @@ class Router {
         //     console.log('home');
         //     res.end('home');
         // },
-        // '/message': (res) => {
-        //     console.log('message');
-        //     res.end('message');
-        // },
+        '/chats': ChatController,
         '/auth': AuthController,
     };
 
