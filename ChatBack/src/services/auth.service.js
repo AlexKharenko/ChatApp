@@ -54,7 +54,10 @@ class AuthService {
     static async signIn({ login, password }) {
         const user = users.filter((item) => item.login == login)[0];
         if (!user) throw L_OR_P_NC;
-        const correct = await AuthService.#isPasswordCorrect(user.password, password);
+        const correct = await AuthService.#isPasswordCorrect(
+            user.password,
+            password
+        );
         if (!correct) throw L_OR_P_NC;
         const authToken = jwt.sign(
             { userId: user.userId, username: user.login },
@@ -64,13 +67,14 @@ class AuthService {
         return { message: 'Signed In successfully', authToken };
     }
 
-    static verifyAuth({ authToken }) {
+    static verifyAuth(req) {
+        const { authToken } = req.client.cookie;
         if (!authToken) {
             throw T_R;
         }
         try {
             const decoded = jwt.verify(authToken, process.env.JWT_SECRET);
-            return { verified: true, user: decoded };
+            req.user = decoded;
         } catch (err) {
             throw I_T;
         }
