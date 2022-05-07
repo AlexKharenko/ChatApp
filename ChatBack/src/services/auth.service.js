@@ -48,19 +48,17 @@ class AuthService {
         };
         users.push(newUser);
         console.log('signUp');
-        console.dir(users);
         return { message: 'Created successfully' };
     }
 
     static async signIn({ login, password }) {
-        const user = users.filter((item) => (item.login = login))[0];
+        const user = users.filter((item) => item.login == login)[0];
         if (!user) throw L_OR_P_NC;
-        const correct = AuthService.#isPasswordCorrect(user.password, password);
+        const correct = await AuthService.#isPasswordCorrect(user.password, password);
         if (!correct) throw L_OR_P_NC;
         const authToken = jwt.sign(
             { userId: user.userId, username: user.login },
-            process.env.JWT_SECRET,
-            { algorithm: 'RS256', expiresIn: '24h' },
+            process.env.JWT_SECRET
         );
         console.log('signIn');
         return { message: 'Signed In successfully', authToken };
