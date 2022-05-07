@@ -54,11 +54,9 @@ class AuthService {
 
     static async signIn({ login, password }) {
         const user = users.filter((item) => (item.login = login))[0];
-        if (
-            user === undefined ||
-            !AuthService.#isPasswordCorrect(user.password, password)
-        )
-            throw L_OR_P_NC;
+        if (!user) throw L_OR_P_NC;
+        const correct = AuthService.#isPasswordCorrect(user.password, password);
+        if (!correct) throw L_OR_P_NC;
         const authToken = jwt.sign(
             { userId: user.userId, username: user.login },
             process.env.JWT_SECRET,
