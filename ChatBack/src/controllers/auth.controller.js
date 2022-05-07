@@ -12,18 +12,18 @@ class AuthController {
             },
             '/auth/signin': {
                 func: AuthService.signIn,
-                response: ({ token, ...data }, req, res) => {
+                response: ({ authToken, ...data }, req, res) => {
                     res.statusCode = 200;
-                    req.client.setCookie('authToken', token, true);
+                    req.client.setCookie('authToken', authToken, true);
                     req.client.sendCookie();
                     res.end(JSON.stringify(data));
                 },
             },
             '/auth/logout': {
-                func: () => {
+                func: async () => {
                     return { message: 'You are succesfully logged out' };
                 },
-                response: ({ data }, req, res) => {
+                response: (data, req, res) => {
                     res.statusCode = 200;
                     req.client.deleteCookie('authToken');
                     req.client.sendCookie();
@@ -41,7 +41,7 @@ class AuthController {
             return;
         }
         try {
-            const data = JSON.parse(req?.body?.data || '{}');
+            const data = req?.body?.data || {};
             const result = await route.func({ ...data });
             route.response(result, req, res);
         } catch (err) {
