@@ -60,7 +60,7 @@ class AuthService {
         const authToken = jwt.sign(
             { userId: user.userId, username: user.login },
             process.env.JWT_SECRET,
-            { algorithm: 'RS256', expiresIn: '24h' }
+            { algorithm: 'RS256', expiresIn: '24h' },
         );
         console.log('signIn');
         return { message: 'Signed In successfully', authToken };
