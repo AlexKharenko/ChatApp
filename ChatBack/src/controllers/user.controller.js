@@ -1,26 +1,18 @@
-const { AuthService, ChatService } = require('../services');
+const { AuthService, UserService } = require('../services');
 
-class ChatController {
+class UserController {
     static methods = {
-        '/chats/': {
+        '/profile/': {
             GET: {
-                func: ChatService.getAll,
+                func: UserService.getUser,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
                 },
                 verify: true,
             },
-            POST: {
-                func: ChatService.createChat,
-                response: (data, req, res) => {
-                    res.statusCode = 200;
-                    res.end(JSON.stringify(data));
-                },
-                verify: true,
-            },
-            DELETE: {
-                func: ChatService.DeleteChat,
+            PUT: {
+                func: UserService.updateProfile,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
@@ -28,6 +20,24 @@ class ChatController {
                 verify: true,
             },
         },
+        '/block': {
+            POST: {
+                func: UserService.blockUser,
+                response: (data, req, res) => {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify(data));
+                },
+                verify: true,
+            },
+            DELETE: {
+                func: UserService.unBlockUser,
+                response: (data, req, res) => {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify(data));
+                },
+                verify: true,
+            },
+        }
     };
 
     static async use(req, res) {
@@ -56,4 +66,4 @@ class ChatController {
     }
 }
 
-module.exports = ChatController;
+module.exports = UserController;

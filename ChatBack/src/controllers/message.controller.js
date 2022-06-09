@@ -1,10 +1,20 @@
-const { AuthService, ChatService } = require('../services');
+const { AuthService, MessageService } = require('../services');
 
-class ChatController {
+class MessageController {
     static methods = {
-        '/chats/': {
+        '/messages/': {
             GET: {
-                func: ChatService.getAll,
+                func: MessageService.getMessages,
+                response: (data, req, res) => {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify(data));
+                },
+                verify: true,
+            },
+        },
+        '/message': {
+            GET: {
+                func: MessageService.getMessage,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
@@ -12,7 +22,15 @@ class ChatController {
                 verify: true,
             },
             POST: {
-                func: ChatService.createChat,
+                func: MessageService.createMessage,
+                response: (data, req, res) => {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify(data));
+                },
+                verify: true,
+            },
+            PUT: {
+                func: MessageService.updateMessage,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
@@ -20,7 +38,7 @@ class ChatController {
                 verify: true,
             },
             DELETE: {
-                func: ChatService.DeleteChat,
+                func: MessageService.deleteMessage,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
@@ -56,4 +74,4 @@ class ChatController {
     }
 }
 
-module.exports = ChatController;
+module.exports = MessageController;
