@@ -60,7 +60,7 @@ class AuthService {
         );
         if (!correct) throw L_OR_P_NC;
         const authToken = jwt.sign(
-            { userId: user.userId, username: user.login },
+            { userId: user.userId },
             process.env.JWT_SECRET
         );
         console.log('signIn');
