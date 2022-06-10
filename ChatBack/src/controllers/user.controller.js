@@ -1,38 +1,42 @@
 const AuthService = require('../services/auth.service');
+const UserService = require('../services/user.service');
 
-class AuthController {
+class UserController {
     static methods = {
-        '/auth/signup': {
-            POST: {
-                func: AuthService.signUp,
+        '/users/profile': {
+            GET: {
+                func: UserService.getUser,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
                 },
+                verify: true,
             },
-        },
-        '/auth/signin': {
-            POST: {
-                func: AuthService.signIn,
-                response: ({ authToken, ...data }, req, res) => {
-                    res.statusCode = 200;
-                    req.client.setCookie('authToken', authToken, true);
-                    req.client.sendCookie();
-                    res.end(JSON.stringify(data));
-                },
-            },
-        },
-        '/auth/logout': {
-            POST: {
-                func: async () => {
-                    return { message: 'You are succesfully logged out' };
-                },
+            PUT: {
+                func: UserService.updateProfile,
                 response: (data, req, res) => {
                     res.statusCode = 200;
-                    req.client.deleteCookie('authToken');
-                    req.client.sendCookie();
                     res.end(JSON.stringify(data));
                 },
+                verify: true,
+            },
+        },
+        '/users/block': {
+            POST: {
+                func: UserService.blockUser,
+                response: (data, req, res) => {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify(data));
+                },
+                verify: true,
+            },
+            DELETE: {
+                func: UserService.unblockUser,
+                response: (data, req, res) => {
+                    res.statusCode = 200;
+                    res.end(JSON.stringify(data));
+                },
+                verify: true,
             },
         },
     };
@@ -46,9 +50,17 @@ class AuthController {
             res.end(JSON.stringify({ message: 'Not found 404!' }));
             return;
         }
+
         try {
+            if (route.verify) {
+                AuthService.verifyAuth(req);
+            }
             const data = req?.body?.data || {};
-            const result = await route.func({ ...data });
+            const result = await route.func({
+                ...data,
+                userId: req?.user?.userId,
+                query: req.query,
+            });
             route.response(result, req, res);
         } catch (err) {
             res.statusCode = err.statusCode || 500;
@@ -57,4 +69,4 @@ class AuthController {
     }
 }
 
-module.exports = AuthController;
+module.exports = UserController;
