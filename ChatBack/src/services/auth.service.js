@@ -1,26 +1,25 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const { L_E, L_OR_P_NC, T_R, I_T } = require('../errors/error.list');
-
-const users = [
-    {
-        userId: 1,
-        login: 'alex',
-        password: 'user1234',
-    },
-];
+const UserService = require('./user.service');
+const {
+    U_E,
+    E_E,
+    E_OR_P_NC,
+    T_R,
+    I_T,
+    F_S_NE,
+} = require('../errors/error.list');
 
 class AuthService {
     static #SALT = 10;
 
-    static #DoesLoginExist(login) {
-        for (const user of users) {
-            if (user.login === login) {
-                return true;
+    static #checkSighUpFields(user) {
+        const keys = ['userName', 'email', 'firstName', 'lastName', 'password'];
+        for (let key of keys) {
+            if (!user[key] || user[key] == '') {
+                throw F_S_NE;
             }
         }
-        return false;
     }
 
     static async #isPasswordCorrect(hashedPassword, password) {
@@ -30,40 +29,41 @@ class AuthService {
         return false;
     }
 
-    static async signUp({ login, password }) {
-        if (!login || !password) throw L_OR_P_NC;
-        if (AuthService.#DoesLoginExist(login)) {
-            throw L_E;
+    static async signUp(user) {
+        AuthService.#checkSighUpFields(user);
+        if (await UserService.isUserNameExist(user.userName)) {
+            throw U_E;
         }
-
-        let maxId = 0;
-        for (const user of users) {
-            maxId = maxId > user.userId ? maxId : user.userId;
+        if (await UserService.getUserByEmail(user.email)) {
+            throw E_E;
         }
-        const hashedPassword = await bcrypt.hash(password, AuthService.#SALT);
+        const hashedPassword = await bcrypt.hash(
+            user.password,
+            AuthService.#SALT
+        );
         const newUser = {
-            userId: maxId + 1,
-            login,
+            userName: user.userName,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
             password: hashedPassword,
         };
-        users.push(newUser);
-        console.log('signUp');
+        await UserService.createUser(newUser);
         return { message: 'Created successfully' };
     }
 
-    static async signIn({ login, password }) {
-        const user = users.filter((item) => item.login == login)[0];
-        if (!user) throw L_OR_P_NC;
+    static async signIn({ email, password }) {
+        const user = await UserService.getUserByEmail(email);
+        if (!user) throw E_OR_P_NC;
         const correct = await AuthService.#isPasswordCorrect(
             user.password,
             password
         );
-        if (!correct) throw L_OR_P_NC;
+        if (!correct) throw E_OR_P_NC;
         const authToken = jwt.sign(
             { userId: user.userId },
             process.env.JWT_SECRET
         );
-        console.log('signIn');
         return { message: 'Signed In successfully', authToken };
     }
 
