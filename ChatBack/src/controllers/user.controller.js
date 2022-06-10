@@ -1,8 +1,9 @@
-const { AuthService, UserService } = require('../services');
+const AuthService = require('../services/auth.service');
+const UserService = require('../services/user.service');
 
 class UserController {
     static methods = {
-        '/profile/': {
+        '/users/profile': {
             GET: {
                 func: UserService.getUser,
                 response: (data, req, res) => {
@@ -20,7 +21,7 @@ class UserController {
                 verify: true,
             },
         },
-        '/block': {
+        '/users/block': {
             POST: {
                 func: UserService.blockUser,
                 response: (data, req, res) => {
@@ -30,18 +31,20 @@ class UserController {
                 verify: true,
             },
             DELETE: {
-                func: UserService.unBlockUser,
+                func: UserService.unblockUser,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
                 },
                 verify: true,
             },
-        }
+        },
     };
 
     static async use(req, res) {
-        const route = this.methods[req.url][req.method];
+        const route = this.methods[req.parsedUrl]
+            ? this.methods[req.parsedUrl][req.method]
+            : undefined;
         if (!route) {
             res.statusCode = 404;
             res.end(JSON.stringify({ message: 'Not found 404!' }));

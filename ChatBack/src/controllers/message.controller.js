@@ -1,8 +1,9 @@
-const { AuthService, MessageService } = require('../services');
+const AuthService = require('../services/auth.service');
+const MessageService = require('../services/message.service');
 
 class MessageController {
     static methods = {
-        '/messages/': {
+        '/messages': {
             GET: {
                 func: MessageService.getMessages,
                 response: (data, req, res) => {
@@ -11,16 +12,16 @@ class MessageController {
                 },
                 verify: true,
             },
-        },
-        '/message': {
-            GET: {
-                func: MessageService.getMessage,
+            DELETE: {
+                func: MessageService.deleteMessagesForBoth,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
                 },
                 verify: true,
             },
+        },
+        '/message': {
             POST: {
                 func: MessageService.createMessage,
                 response: (data, req, res) => {
@@ -37,19 +38,13 @@ class MessageController {
                 },
                 verify: true,
             },
-            DELETE: {
-                func: MessageService.deleteMessage,
-                response: (data, req, res) => {
-                    res.statusCode = 200;
-                    res.end(JSON.stringify(data));
-                },
-                verify: true,
-            },
         },
     };
 
     static async use(req, res) {
-        const route = this.methods[req.url][req.method];
+        const route = this.methods[req.parsedUrl]
+            ? this.methods[req.parsedUrl][req.method]
+            : undefined;
         if (!route) {
             res.statusCode = 404;
             res.end(JSON.stringify({ message: 'Not found 404!' }));

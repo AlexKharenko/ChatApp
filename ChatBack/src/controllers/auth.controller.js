@@ -1,4 +1,4 @@
-const { AuthService } = require('../services');
+const AuthService = require('../services/auth.service');
 
 class AuthController {
     static methods = {
@@ -38,7 +38,9 @@ class AuthController {
     };
 
     static async use(req, res) {
-        const route = this.methods[req.url][req.method];
+        const route = this.methods[req.parsedUrl]
+            ? this.methods[req.parsedUrl][req.method]
+            : undefined;
         if (!route) {
             res.statusCode = 404;
             res.end(JSON.stringify({ message: 'Not found 404!' }));

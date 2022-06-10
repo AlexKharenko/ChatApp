@@ -1,10 +1,11 @@
-const { AuthService, ChatService } = require('../services');
+const AuthService = require('../services/auth.service');
+const ChatService = require('../services/chat.service');
 
 class ChatController {
     static methods = {
         '/chats/': {
             GET: {
-                func: ChatService.getAll,
+                func: ChatService.getChats,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
@@ -20,7 +21,7 @@ class ChatController {
                 verify: true,
             },
             DELETE: {
-                func: ChatService.DeleteChat,
+                func: ChatService.deleteChat,
                 response: (data, req, res) => {
                     res.statusCode = 200;
                     res.end(JSON.stringify(data));
@@ -31,7 +32,9 @@ class ChatController {
     };
 
     static async use(req, res) {
-        const route = this.methods[req.url][req.method];
+        const route = this.methods[req.parsedUrl]
+            ? this.methods[req.parsedUrl][req.method]
+            : {};
         if (!route) {
             res.statusCode = 404;
             res.end(JSON.stringify({ message: 'Not found 404!' }));
