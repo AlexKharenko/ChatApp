@@ -24,10 +24,9 @@ CREATE TABLE IF NOT EXISTS textmessages (
     "body" text NOT NULL,
     "ownerId" integer NOT NULL,
     "ifGetterRead" boolean NOT NULL DEFAULT FALSE,
-    "ifGetterCanSee" boolean NOT NULL DEFAULT TRUE,
     "isForwarded" boolean NOT NULL DEFAULT FALSE,
-    "forwardedFromUser" integer NOT NULL,
+    "forwardedFromUser" integer,
     "dateCreated" timestamp NOT NULL DEFAULT NOW(),
     "isEdited" boolean NOT NULL DEFAULT FALSE,
-    "lastEdited" timestamp NOT NULL
+    "lastEdited" timestamp
     )
