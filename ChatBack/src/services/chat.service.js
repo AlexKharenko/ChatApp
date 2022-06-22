@@ -50,7 +50,7 @@ class ChatService {
                     { column: 'secondUserId', value: userId },
                 ],
             });
-            if (!chats || chats.length == 0) throw C_NF;
+            if (!chats || chats.length == 0) return { chats: [] };
             for (let chat of chats) {
                 chat.toUser = await UserService.getUser({
                     userId:
