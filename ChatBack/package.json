@@ -6,6 +6,8 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
+        "startWs": "node index_ws.js",
+        "wsDev": "nodemon index_ws.js",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "lint:check": "eslint .",
