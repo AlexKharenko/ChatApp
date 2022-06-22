@@ -79,6 +79,16 @@ class AuthService {
             throw I_T;
         }
     }
+
+    static wsVerifyAuth(req, token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+            return true;
+        } catch {
+            return false;
+        }
+    }
 }
 
 module.exports = AuthService;
