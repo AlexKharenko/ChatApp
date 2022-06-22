@@ -21,6 +21,17 @@ class MessageService {
             throw new Error(err);
         }
     }
+    static async getMessage({ messageId }) {
+        try {
+            const message = await MessageService.#QUERYBUILDER.findOne({
+                table_name: MessageService.#TABLE_NAME,
+                where: [{ column: 'messageId', value: messageId }],
+            });
+            return { message };
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
     static async createMessage({
         chatId,
         userId,
@@ -78,11 +89,11 @@ class MessageService {
     }
     static async getLastMessageByChat({ chatId }) {
         try {
-            const messages = await MessageService.#QUERYBUILDER.findOne({
+            const message = await MessageService.#QUERYBUILDER.findOne({
                 table_name: MessageService.#TABLE_NAME,
                 where: [{ column: 'chatId', value: chatId }],
             });
-            return { messages };
+            return { message };
         } catch (err) {
             throw new Error(err);
         }
