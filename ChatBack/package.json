@@ -6,6 +6,8 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
+        "startWs": "node index_ws.js",
+        "wsDev": "nodemon index_ws.js",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "lint:check": "eslint .",
@@ -17,6 +19,7 @@
         "bcryptjs": "^2.4.3",
         "dotenv": "^14.2.0",
         "jsonwebtoken": "^8.5.1",
+        "pg": "^8.7.3",
         "ws": "^8.4.2"
     },
     "devDependencies": {

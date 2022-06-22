@@ -37,8 +37,8 @@ class Client {
 
     setCookie(name, val, httpOnly = false) {
         const { host } = this;
-        const expires = `expires=${process.env.COOKIE_EXPIRE}`;
-        let cookie = `${name}=${val}; ${expires}; Path=/; Domain=${host}`;
+        const maxAge = `Max-Age=${process.env.COOKIE_EXPIRE}`;
+        let cookie = `${name}=${val}; ${maxAge}; Path=/; Domain=${host}`;
         if (httpOnly) cookie += '; HttpOnly';
         this.preparedCookie.push(cookie);
     }
